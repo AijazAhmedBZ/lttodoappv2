@@ -1,6 +1,6 @@
 import React from "react";
-import { Todo, NewTodo } from "@/lib/drizzle";
-import DeleteTodo from "./DeleteTodo";
+import { Todo} from "@/lib/drizzle";
+import TodoItem from "./TodoItem";
 
 const getData = async () => {
   try {
@@ -29,8 +29,12 @@ const TodoList = async () => {
         return (
           <div
             key={item.id}
-            className="bg-white py-2 px-2 flex items-center gap-x-3 shadow rounded-full my-4">
-            <div className="h-auto w-auto font-bold bg-secondary rounded-full">{item.task}</div>
+            className="bg-white py-2 px-2 flex items-center gap-x-3 shadow rounded-full my-4"
+          >
+           {/* <p>{item.task}</p> */}
+           <div>
+            <TodoItem todo={item}/>
+           </div>
             
           </div>
         );

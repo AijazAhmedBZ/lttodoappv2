@@ -1,6 +1,68 @@
-import { Todo, db, todoTable } from "@/lib/drizzle";
-import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { Todo, NewTodo, db, todoTable } from "@/lib/drizzle";
+import { sql } from "@vercel/postgres";
+import { eq } from "drizzle-orm";
+
+// export async function GET(request: NextRequest) {
+//   try {
+//     await sql`CREATE TABLE IF NOT EXISTS Todos(id serial, task varchar(255), isDone boolean);`;
+//     const res = await db.select().from(todoTable).execute();
+//     return NextResponse.json({ data: res });
+//     // console.log(res)
+//   } catch (err) {
+//     console.log((err as { message: "string" }).message);
+//     return NextResponse.json({ message: "Something went wtong" });
+//   }
+// }
+
+// export async function POST(request: NextRequest) {
+//   const req = await request.json();
+//   try {
+//     if (req.task) {
+//       const res = await db
+//         .insert(todoTable)
+//         .values({
+//           task: req.task,
+//           completed: true,
+//         })
+//         .returning();
+//       // console.log(res)
+//       return NextResponse.json({
+//         message: "Data added successfully",
+//         data: res,
+//       });
+//     } else throw new Error("Task field is required");
+//   } catch (error) {
+//     return NextResponse.json({
+//       message: (error as { message: "string" }).message,
+//     });
+//   }
+// }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: Todo } }
+) {
+  const req = await request.json();
+  const id = params.id;
+  try {
+    if (req.task) {
+      const res = await db
+        .delete(todoTable)
+        .where(eq(todoTable.id, todoTable.completed))
+        .returning({ id: todoTable.id, task: todoTable.task });
+      console.log("result", res);
+      return NextResponse.json({
+        // message: "Data deleted successfully. updated ID: " + id,
+        data: res,
+      });
+    } else throw new Error("Task field is required");
+  } catch (error) {
+    return NextResponse.json({
+      message: (error as { message: "string" }).message,
+    });
+  }
+}
 
 export async function PUT(
   request: NextRequest,
@@ -12,12 +74,12 @@ export async function PUT(
     if (req.task) {
       const res = await db
         .update(todoTable)
-        .set({task: req.task, completed: req.completed})
-        .where(eq(todoTable.id, id))
-        .returning({task: todoTable.task});
-        //  console.log("result", res)
+        .set({ task: req.task, completed: req.completed })
+        .where(eq(todoTable.id, todoTable.completed))
+        .returning({ task: todoTable.task });
+      //  console.log("result", res)
       return NextResponse.json({
-        message: "Data updated successfully. updated ID: " + id,
+        // message: "Data updated successfully. updated ID: " + id,
         data: res,
       });
     } else throw new Error("Task field is required");
@@ -27,98 +89,3 @@ export async function PUT(
     });
   }
 }
-
-export async function DELETE(
-    request: NextRequest,
-    { params }: { params: { id: Todo } }
-  ) {
-    const req = await request.json();
-    const id = params.id;
-    try {
-      if (req.task) {
-        const res = await db
-          .delete(todoTable)
-          .where(eq(todoTable.id, id))
-          .returning({id: todoTable.id, task: todoTable.task});
-           console.log("result", res)
-        return NextResponse.json({
-          message: "Data deleted successfully. updated ID: " + id,
-          data: res,
-        });
-      } else throw new Error("Task field is required");
-    } catch (error) {
-      return NextResponse.json({
-        message: (error as { message: "string" }).message,
-      });
-    }
-  }
-
-
-// export async function DELETE(
-//     request: NextRequest,
-//     { params }: { params: { id: NewTodo } }
-//   ) {
-//     const req = await request.json();
-//     const id = params.id;
-//     try {
-//       if (req.task) {
-//         const res = await db
-//           .delete(toddoTable)
-//           .where(eq(id, inserted))
-//           .returning();
-//         //    console.log(res)
-//         return NextResponse.json({
-//           message: "Data updated successfully. updated ID: " + id,
-//           data: res,
-//         });
-//       } else throw new Error("Task field is required");
-//     } catch (error) {
-//       return NextResponse.json({
-//         message: (error as { message: "string" }).message,
-//       });
-//     }
-//   }
-  
-
-// export const PUT = async (
-//   request: NextRequest,
-//   { params }: { params: { id: NewTodo } }
-// ) => {
-// const id = params.id
-//     return NextResponse.json({message:"PUT request successful. Id updqated is:"
-// +id})
-// }
-
-// export const DELETE = async (
-//     request: NextRequest,
-//     { params }: { params: { id: NewTodo } }
-//   ) => {
-//   const id = params.id
-//   console.log(id, "yeh yo dekho")
-//       return NextResponse.json({message:"Delete request successful. Id updqated is:"
-//   +id})
-//   }
-
-//   const req = await request.json();
-//   try {
-//     if (req.task) {
-//       const res = await db
-//         .update(toddoTable)
-//         .set({
-//           task: req.task,
-//           completed: req.completed,
-//         })
-//         .returning();
-//       console.log(res);
-//       return NextResponse.json({
-//         message: "Data updated successfully",
-//         data: res,
-//       });
-//     } else throw new Error("Task field is required");
-//   } catch (error) {
-//     return NextResponse.json({
-//       message: (error as { message: "string" }).message,
-//     });
-//   }
-// };
-// export default PUT;
