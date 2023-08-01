@@ -3,12 +3,11 @@ import { Todo, NewTodo, db, todoTable } from "@/lib/drizzle";
 import { sql } from "@vercel/postgres";
 import { eq } from "drizzle-orm";
 
-
 export async function POST(request: NextRequest) {
   const req = await request.json();
   try {
     if (req.task) {
-      const res:NewTodo[] = await db
+      const res: NewTodo[] = await db
         .insert(todoTable)
         .values({
           task: req.task,
@@ -27,32 +26,33 @@ export async function POST(request: NextRequest) {
   }
 }
 
-
 export const GET = async (request: NextRequest) => {
   try {
     await sql`CREATE TABLE IF NOT EXISTS Todos(id serial, task varchar(255), completed boolean);`;
-    const res:Todo[] = await db.select().from(todoTable).execute();
+    const res: Todo[] = await db.select().from(todoTable).execute();
     return NextResponse.json({ data: res });
     // console.log(res)
   } catch (err) {
     console.log((err as { message: string }).message);
     return NextResponse.json({ message: "Something went wrong" });
   }
-}
+};
 
-export const DELETE = async(request: NextRequest,{ params }: { params: { id: Todo } }
-) {
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: Todo } }
+) => {
   const req = await request.json();
   const taskId = params.id;
   try {
     if (req.task) {
       const res = await db
         .delete(todoTable)
-        .where(eq(todoTable.id, taskId))
+        .where(eq(todoTable.id, taskId.id))
         .returning({ id: todoTable.id, task: todoTable.task });
       console.log("result", res);
       return NextResponse.json({
-        // message: "Data deleted successfully. updated ID: " + id,
+        message: "Data deleted successfully. updated ID: " + id,
         data: res,
       });
     } else throw new Error("Task field is required");
@@ -61,7 +61,7 @@ export const DELETE = async(request: NextRequest,{ params }: { params: { id: Tod
       message: (error as { message: "string" }).message,
     });
   }
-}
+};
 
 // export async function PUT(
 //   request: NextRequest,
