@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
         .insert(todoTable)
         .values({
           task: req.task,
+          completed: false,
         })
         .returning();
       // console.log(res)
@@ -49,10 +50,10 @@ export const DELETE = async (
       const res = await db
         .delete(todoTable)
         .where(eq(todoTable.id, taskId.id))
-        .returning({ id: todoTable.id, task: todoTable.task });
-      console.log("result", res);
+        .returning({ task: todoTable.task });
+      // console.log("result", res);
       return NextResponse.json({
-        message: "Data deleted successfully. updated ID: " + id,
+        message: "Data deleted successfully. updated ID: " + taskId,
         data: res,
       });
     } else throw new Error("Task field is required");
@@ -63,22 +64,22 @@ export const DELETE = async (
   }
 };
 
-// export async function PUT(
+// export const PUT = async (
 //   request: NextRequest,
-//   // { params }: { params: { id: Todo } }
-// ) {
+//   { params }: { params: { id: Todo } }
+// ) => {
 //   const req = await request.json();
-//   // const id = params.id;
+//   const taskId = params.id;
 //   try {
 //     if (req.task) {
 //       const res = await db
 //         .update(todoTable)
-//         .set({ task: req.task, completed: req.completed })
-//         // .where(eq(todoTable.id, todoTable.completed))
-//         .returning({ task: todoTable.task });
+//         .set({completed: req.completed })
+//         .where(eq(todoTable.id, taskId.id))
+//         .returning({ task: todoTable.completed });
 //       //  console.log("result", res)
 //       return NextResponse.json({
-//         // message: "Data updated successfully. updated ID: " + id,
+//         message: "Data updated successfully. updated ID: " + taskId,
 //         data: res,
 //       });
 //     } else throw new Error("Task field is required");
@@ -87,4 +88,4 @@ export const DELETE = async (
 //       message: (error as { message: "string" }).message,
 //     });
 //   }
-// }
+// };

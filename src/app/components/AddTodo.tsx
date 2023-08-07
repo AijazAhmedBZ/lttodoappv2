@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 const AddTodo = () => {
   const [task, setTask] = useState<NewTodo | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { refresh } = useRouter();
+  const  router  = useRouter();
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -19,11 +19,11 @@ const AddTodo = () => {
           }),
         });
         // console.log(res.ok);
-        refresh();
+        router.refresh();
         setTask({ task: " " });
       }
     } catch (error) {
-      console.log("error");
+      // console.log("error");
     } finally {
       setLoading(false);
     }
