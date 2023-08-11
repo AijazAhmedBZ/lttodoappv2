@@ -31,7 +31,7 @@ const TodoList = async () => {
             key={item.id}
             className="bg-white py-2 px-2 flex items-center gap-x-3 shadow rounded-full my-4"
           >
-           {/* <p>{item.task}</p> */}
+           {/* <p>{item.id}</p> */}
            <div>
             <TodoItem todo={item}/>
            </div>

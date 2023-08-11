@@ -9,6 +9,7 @@ const AddTodo = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const  router  = useRouter();
   const handleSubmit = async () => {
+    alert(`You are about to add new task ${task?.task}`)
     try {
       setLoading(true);
       if (task) {
@@ -18,9 +19,9 @@ const AddTodo = () => {
             task: task.task,
           }),
         });
+        setTask({ task: " " });
         // console.log(res.ok);
         router.refresh();
-        setTask({ task: " " });
       }
     } catch (error) {
       // console.log("error");
@@ -33,6 +34,7 @@ const AddTodo = () => {
     <div>
       <form className="w-full flex gap-x-3">
         <input
+        placeholder="Please Add Task"
           onChange={(e) => setTask({ task: e.target.value })}
           className="rounded-full w-full py-3.5 px-5 border focus:outline-secondary"
           type="text"
@@ -40,6 +42,7 @@ const AddTodo = () => {
         <button
           type="button"
           onClick={handleSubmit}
+          // onMouseEnter={handleSubmit} on mouse hover on button handleSubmit will call
           className="p-4 shrink-0 rounded-full bg-gradient-to-b from from-primary to to-secondary"
         >
           <Image src={"/vector.png"} width={20} height={20} alt="vector" />

@@ -41,20 +41,19 @@ export const GET = async (request: NextRequest) => {
 
 export const DELETE = async (
   request: NextRequest,
-  { params }: { params: { id: Todo } }
+  // { params }: { params: { id: Todo } }
 ) => {
   const req = await request.json();
-  const taskId = params.id;
+  // const taskId = params.id;
   try {
     if (req.task) {
       const res = await db
         .delete(todoTable)
-        .where(eq(todoTable.id, taskId.id))
-        .returning({ task: todoTable.task });
+        // .where(eq(todoTable.id, taskId.id))
+        .returning();
       // console.log("result", res);
       return NextResponse.json({
-        message: "Data deleted successfully. updated ID: " + taskId,
-        data: res,
+        message: "Data deleted successfully. updated ID: "
       });
     } else throw new Error("Task field is required");
   } catch (error) {
