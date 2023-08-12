@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 
 const AddTodo = () => {
   const [task, setTask] = useState<NewTodo | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const  router  = useRouter();
+  // const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
   const handleSubmit = async () => {
-    alert(`You are about to add new task ${task?.task}`)
+    alert(`You are about to add new task "${task?.task}"`);
     try {
-      setLoading(true);
+      // setLoading(!loading);
       if (task) {
         const res = await fetch("/api/todo", {
           method: "POST",
@@ -19,14 +19,14 @@ const AddTodo = () => {
             task: task.task,
           }),
         });
-        setTask({ task: " " });
         // console.log(res.ok);
         router.refresh();
       }
+      setTask({ task: " " });
     } catch (error) {
       // console.log("error");
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -34,7 +34,7 @@ const AddTodo = () => {
     <div>
       <form className="w-full flex gap-x-3">
         <input
-        placeholder="Please Add Task"
+          placeholder="Please Add Task"
           onChange={(e) => setTask({ task: e.target.value })}
           className="rounded-full w-full py-3.5 px-5 border focus:outline-secondary"
           type="text"

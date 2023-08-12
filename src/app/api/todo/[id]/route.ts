@@ -49,8 +49,8 @@ export async function DELETE(
     if (req.task) {
       const res = await db
         .delete(todoTable)
-        .where(eq(todoTable.id, todoTable.completed))
-        .returning({ id: todoTable.id, task: todoTable.task });
+        .where(eq(todoTable.id, id.id))
+        .returning();
     //   console.log("result", res);
       return NextResponse.json({
         message: "Data deleted successfully. updated ID: " + id,
