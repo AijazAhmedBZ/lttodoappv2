@@ -5,7 +5,7 @@ import { NewTodo } from "@/lib/drizzle";
 import { useRouter } from "next/navigation";
 
 const AddTodo = () => {
-  const [task, setTask] = useState<NewTodo | null>(null);
+  const [task, setTask] = useState<NewTodo | null>(null); // task is the variable for storing state, <NewTodo | null is the type of useState
   // const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const handleSubmit = async () => {
@@ -34,10 +34,10 @@ const AddTodo = () => {
     <div>
       <form className="w-full flex gap-x-3">
         <input
-          placeholder="Please Add Task"
+          type="text"
+          placeholder="Please Add Task...."
           onChange={(e) => setTask({ task: e.target.value })}
           className="rounded-full w-full py-3.5 px-5 border focus:outline-secondary"
-          type="text"
         />
         <button
           type="button"
