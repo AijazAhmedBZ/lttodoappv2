@@ -3,45 +3,23 @@ import { Todo, NewTodo, db, todoTable } from "@/lib/drizzle";
 import { sql } from "@vercel/postgres";
 import { eq } from "drizzle-orm";
 
-// export async function GET(request: NextRequest) {
-//   try {
-//     await sql`CREATE TABLE IF NOT EXISTS Todos(id serial, task varchar(255), isDone boolean);`;
-//     const res = await db.select().from(todoTable).execute();
-//     return NextResponse.json({ data: res });
-//     // console.log(res)
-//   } catch (err) {
-//     console.log((err as { message: "string" }).message);
-//     return NextResponse.json({ message: "Something went wtong" });
-//   }
-// }
-
-// export async function POST(request: NextRequest) {
-//   const req = await request.json();
-//   try {
-//     if (req.task) {
-//       const res = await db
-//         .insert(todoTable)
-//         .values({
-//           task: req.task,
-//           completed: true,
-//         })
-//         .returning();
-//       // console.log(res)
-//       return NextResponse.json({
-//         message: "Data added successfully",
-//         data: res,
-//       });
-//     } else throw new Error("Task field is required");
-//   } catch (error) {
-//     return NextResponse.json({
-//       message: (error as { message: "string" }).message,
-//     });
-//   }
-// }
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: number } }
+) {
+  const id = params.id;
+  try {
+    const res = await db.select().from(todoTable).where(eq(todoTable.id, id));
+    return NextResponse.json({ data: res });
+  } catch (err) {
+    console.log((err as { message: "string" }).message);
+    return NextResponse.json({ message: "Something went wtong" });
+  }
+}
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: Todo } }
+  { params }: { params: { id: number } }
 ) {
   const req = await request.json();
   const id = params.id;
@@ -49,12 +27,10 @@ export async function DELETE(
     if (req.task) {
       const res = await db
         .delete(todoTable)
-        .where(eq(todoTable.id, id.id))
+        .where(eq(todoTable.id, id))
         .returning();
-    //   console.log("result", res);
       return NextResponse.json({
-        message: "Data deleted successfully. updated ID: " + id,
-        data: res,
+        message: "Data deleted successfully. deleted ID: " + id,
       });
     } else throw new Error("Task field is required");
   } catch (error) {
@@ -64,28 +40,34 @@ export async function DELETE(
   }
 }
 
-// export async function PUT(
-//   request: NextRequest,
-//   { params }: { params: { id: Todo } }
-// ) {
-//   const req = await request.json();
-//   const id = params.id;
-//   try {
-//     if (req.task) {
-//       const res = await db
-//         .update(todoTable)
-//         .set({ task: req.task, completed: req.completed })
-//         .where(eq(todoTable.id, todoTable.completed))
-//         .returning({ task: todoTable.task });
-//       //  console.log("result", res)
-//       return NextResponse.json({
-//         // message: "Data updated successfully. updated ID: " + id,
-//         data: res,
-//       });
-//     } else throw new Error("Task field is required");
-//   } catch (error) {
-//     return NextResponse.json({
-//       message: (error as { message: "string" }).message,
-//     });
-//   }
-// }
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: number } }
+) {
+  const req = await request.json();
+  const id = params.id;
+  const updatedValues :{task?: string,completed?: boolean}={};
+  if(req.task!=null){
+    updatedValues.task=req.task
+  }  if(req.completed!=null){
+    updatedValues.completed=req.completed
+  }
+  try {
+    if (req.task) {
+      const res = await db
+        .update(todoTable)
+        .set( updatedValues)
+        .where(eq(todoTable.id, id))
+        .returning({id:todoTable.completed});
+      //  console.log("result", res)
+      return NextResponse.json({
+        message: "Data updated successfully. updated ID: " + id,
+        data: res,
+      });
+    } else throw new Error("Task field of ID is required");
+  } catch (error) {
+    return NextResponse.json({
+      message: (error as { message: "string" }).message,
+    });
+  }
+}

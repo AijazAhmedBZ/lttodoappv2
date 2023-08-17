@@ -39,21 +39,15 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-export const DELETE = async (
-  request: NextRequest,
-  // { params }: { params: { id: Todo } }
-) => {
+export const DELETE = async (request: NextRequest) => {
   const req = await request.json();
-  // const taskId = params.id;
   try {
     if (req.task) {
       const res = await db
         .delete(todoTable)
-        // .where(eq(todoTable.id, taskId.id))
         .returning();
-      // console.log("result", res);
       return NextResponse.json({
-        message: "Data deleted successfully. updated ID: "
+        message: "All todos deleted successfully.",
       });
     } else throw new Error("Task field is required");
   } catch (error) {
@@ -63,28 +57,22 @@ export const DELETE = async (
   }
 };
 
-// export const PUT = async (
-//   request: NextRequest,
-//   { params }: { params: { id: Todo } }
-// ) => {
-//   const req = await request.json();
-//   const taskId = params.id;
-//   try {
-//     if (req.task) {
-//       const res = await db
-//         .update(todoTable)
-//         .set({completed: req.completed })
-//         .where(eq(todoTable.id, taskId.id))
-//         .returning({ task: todoTable.completed });
-//       //  console.log("result", res)
-//       return NextResponse.json({
-//         message: "Data updated successfully. updated ID: " + taskId,
-//         data: res,
-//       });
-//     } else throw new Error("Task field is required");
-//   } catch (error) {
-//     return NextResponse.json({
-//       message: (error as { message: "string" }).message,
-//     });
-//   }
-// };
+export const PUT = async (
+  request: NextRequest
+) => {
+  const req = await request.json();
+   try {
+    if (req.task) {
+      const res = await db
+        .update(todoTable)
+        .set({completed: true })
+        .returning();
+      return NextResponse.json({
+        message: "All todos updated successfully."});
+    } else throw new Error("Task field is required");
+  } catch (error) {
+    return NextResponse.json({
+      message: (error as { message: "string" }).message,
+    });
+  }
+};

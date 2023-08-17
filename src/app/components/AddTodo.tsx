@@ -5,13 +5,13 @@ import { NewTodo } from "@/lib/drizzle";
 import { useRouter } from "next/navigation";
 
 const AddTodo = () => {
-  const [task, setTask] = useState<NewTodo | null>(null); // task is the variable for storing state, <NewTodo | null is the type of useState
-  // const [loading, setLoading] = useState<boolean>(false);
+  const [task, setTask] = useState<NewTodo | null>(null); // task is a variable for storing state, <NewTodo | null is the type of useState
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const handleSubmit = async () => {
     alert(`You are about to add new task "${task?.task}"`);
     try {
-      // setLoading(!loading);
+      setLoading(!loading);
       if (task) {
         const res = await fetch("/api/todo", {
           method: "POST",
@@ -19,14 +19,12 @@ const AddTodo = () => {
             task: task.task,
           }),
         });
-        // console.log(res.ok);
-        router.refresh();
       }
+      router.refresh();
       setTask({ task: " " });
+      setLoading(false);
     } catch (error) {
-      // console.log("error");
-    } finally {
-      // setLoading(false);
+    } {
     }
   };
 
