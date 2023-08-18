@@ -43,7 +43,7 @@ export const DELETE = async (request: NextRequest) => {
   const req = await request.json();
   try {
     if (req.task) {
-      const res = await db
+      await db
         .delete(todoTable)
         .returning();
       return NextResponse.json({
@@ -63,12 +63,12 @@ export const PUT = async (
   const req = await request.json();
    try {
     if (req.task) {
-      const res = await db
+      await db
         .update(todoTable)
-        .set({completed: true })
+        .set({completed: false })
         .returning();
       return NextResponse.json({
-        message: "All todos updated successfully."});
+        message: "All todos updated successfully.", req});
     } else throw new Error("Task field is required");
   } catch (error) {
     return NextResponse.json({

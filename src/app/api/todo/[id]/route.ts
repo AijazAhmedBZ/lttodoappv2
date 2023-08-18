@@ -46,19 +46,20 @@ export async function PUT(
 ) {
   const req = await request.json();
   const id = params.id;
-  const updatedValues :{task?: string,completed?: boolean}={};
-  if(req.task!=null){
-    updatedValues.task=req.task
-  }  if(req.completed!=null){
-    updatedValues.completed=req.completed
+  const updatedValues: { task?: string; completed?: boolean } = {};
+  if (req.task != null) {
+    updatedValues.task = req.task;
+  }
+  if (req.completed != null) {
+    updatedValues.completed = req.completed;
   }
   try {
     if (req.task) {
       const res = await db
         .update(todoTable)
-        .set( updatedValues)
+        .set(updatedValues)
         .where(eq(todoTable.id, id))
-        .returning({id:todoTable.completed});
+        .returning({ id: todoTable.completed });
       //  console.log("result", res)
       return NextResponse.json({
         message: "Data updated successfully. updated ID: " + id,
