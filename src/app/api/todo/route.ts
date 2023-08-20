@@ -10,10 +10,10 @@ export async function POST(request: NextRequest) {
       const res: NewTodo[] = await db
         .insert(todoTable)
         .values({
-          task: req.task,
+          task: req.task,// task is column of database and req.task is user input
           completed: false,
         })
-        .returning();
+        .returning();//whatever data we insert it will return in returning
       // console.log(res)
       return NextResponse.json({
         data: res,

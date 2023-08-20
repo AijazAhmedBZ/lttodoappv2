@@ -3,7 +3,7 @@ import { Todo } from "@/lib/drizzle";
 import TodoItem from "./TodoItem";
 
 const getData = async () => {
-  try {
+  try {//for erroer handling while using async await use try catch 
     const res = await fetch("http://127.0.0.1:3000/api/todo", {
       method: "GET",
       cache: "no-store",
@@ -25,7 +25,7 @@ const TodoList = async () => {
   const res: { data: Todo[] } = await getData();
   return (
     <div className="max-h-[376px] overflow-auto">
-      {res.data.map((item) => {
+      {res.data.map((item) => { //this is a callback function
         return (
           <div
             key={item.id}

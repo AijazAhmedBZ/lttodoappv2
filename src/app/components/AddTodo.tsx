@@ -5,7 +5,9 @@ import { NewTodo } from "@/lib/drizzle";
 import { useRouter } from "next/navigation";
 
 const AddTodo = () => {
-  const [task, setTask] = useState<NewTodo | null>(null); // task is a variable for storing state, <NewTodo | null is the type of useState
+  const [task, setTask] = useState<NewTodo| null>(null); // task is a variable for storing state, <NewTodo | null is the type of useState
+  // console.log(task) this will consol onchange of task field
+  
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const handleSubmit = async () => {
@@ -16,12 +18,12 @@ const AddTodo = () => {
         const res = await fetch("/api/todo", {
           method: "POST",
           body: JSON.stringify({
-            task: task.task,
+            task: task.task,//task"is state variable".task is database field name
           }),
         });
       }
-      router.refresh();
-      setTask({ task: " " });
+      router.refresh();//refresh is used to refresh component
+      setTask({ task: "" });
       setLoading(false);
     } catch (error) {
     } {
@@ -34,7 +36,7 @@ const AddTodo = () => {
         <input
           type="text"
           placeholder="Please Add Task...."
-          onChange={(e) => setTask({ task: e.target.value })}
+          onChange={(e) => setTask({ task: e.target.value })}//callback function
           className="rounded-full w-full py-3.5 px-5 border focus:outline-secondary"
         />
         <button

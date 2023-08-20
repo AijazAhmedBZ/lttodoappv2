@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
+// import { useState } from "react";
+// import { Todo } from "@/lib/drizzle";
 async function update(id: number, completed: boolean, refresh:any) {
  await fetch(`/api/todo?id=${id}`, {
     method: "PUT",
@@ -21,6 +22,7 @@ async function deleteTodo(id: number, refresh:any) {
 }
 
 export default function TodoItem({ todo }: any) {
+  // const [click, setTask] = useState:<boolean>({completed:false})
   const router = useRouter()
   return (
     <>
