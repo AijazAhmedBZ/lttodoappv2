@@ -2,16 +2,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { NewTodo } from "@/lib/drizzle";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";// useRouter is Next custome hook and can be used in client components only
 
 const AddTodo = () => {
   const [task, setTask] = useState<NewTodo| null>(null); // task is a variable for storing state, <NewTodo | null is the type of useState
   // console.log(task) this will consol onchange of task field
   
-  const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);//boolean is the type of state initial value
+  const {refresh} = useRouter();
   const handleSubmit = async () => {
-    alert(`You are about to add new task "${task?.task}"`);
+    // alert(`You are about to add new task "${task?.task}"`);
     try {
       setLoading(!loading);
       if (task) {
@@ -22,11 +22,11 @@ const AddTodo = () => {
           }),
         });
       }
-      router.refresh();//refresh is used to refresh component
-      setTask({ task: "" });
       setLoading(false);
     } catch (error) {
-    } {
+    }finally {
+      // setTask({ task: "" });
+      refresh();//refresh is used to refresh component
     }
   };
 

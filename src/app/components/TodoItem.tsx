@@ -9,16 +9,19 @@ async function update(id: number, completed: boolean, refresh:any) {
     body: JSON.stringify({ id, completed }),
     
   });
-refresh()
+// refresh()
 }
 
 async function deleteTodo(id: number, refresh:any) {
-  await fetch(`/api/todo?id=${id}`, {
+  const res = await fetch(`/api/todo?id=${id}`, {
     method: "DELETE",
     body: JSON.stringify({ id }),
     
   });
-  refresh()
+  if(res.ok){
+    console.log("Deleting log",res.body)
+  }
+  // refresh()
 }
 
 export default function TodoItem({ todo }: any) {
