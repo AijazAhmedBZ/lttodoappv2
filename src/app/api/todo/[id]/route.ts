@@ -21,10 +21,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: number } }
 ) {
-  const req = await request.json();
+  // const req = await request.json();
   const id = params.id;
   try {
-    if (req.task) {
+    if (id) {
       const res = await db
         .delete(todoTable)
         .where(eq(todoTable.id, id))

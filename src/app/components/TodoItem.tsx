@@ -1,32 +1,35 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-// import { useState } from "react";
-// import { Todo } from "@/lib/drizzle";
-async function update(id: number, completed: boolean, refresh:any) {
- await fetch(`/api/todo?id=${id}`, {
+import { useState } from "react";
+
+async function update(id: number, completed: boolean, refresh: any) {
+  const res = await fetch(`/api/todo/${id}`, {
     method: "PUT",
     body: JSON.stringify({ id, completed }),
-    
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
-// refresh()
+  if (res.ok) {
+    console.log("Check log", res.body, id);
+  }
+  refresh();
 }
 
-async function deleteTodo(id: number, refresh:any) {
-  const res = await fetch(`/api/todo?id=${id}`, {
+async function deleteTodo(id: number, refresh: any) {
+  const res = await fetch(`/api/todo/${id}`, {
     method: "DELETE",
-    body: JSON.stringify({ id }),
-    
   });
-  if(res.ok){
-    console.log("Deleting log",res.body)
+  if (res.ok) {
+    console.log("Deleting log", res.body, id);
   }
-  // refresh()
+  refresh();
 }
 
 export default function TodoItem({ todo }: any) {
-  // const [click, setTask] = useState:<boolean>({completed:false})
-  const router = useRouter()
+  const router = useRouter();
+  // const [click, setClick] = useState:<boolean>({completed:false})
   return (
     <>
       <input
@@ -35,7 +38,9 @@ export default function TodoItem({ todo }: any) {
         // checked={todo.completed}
       />
       <span>{todo.task}</span>
-      <button onClick={(e) => deleteTodo(todo.id, router.refresh)}>Delete</button>
+      <button onClick={(e) => deleteTodo(todo.id, router.refresh)}>
+        Delete
+      </button>
     </>
   );
 }

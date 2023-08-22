@@ -21,11 +21,14 @@ const AddTodo = () => {
             task: task.task,//task"is state variable".task is database field name
           }),
         });
+        if(res.ok){
+          console.log("Post log",res.body)
+        }
       }
       setLoading(false);
     } catch (error) {
     }finally {
-      // setTask({ task: "" });
+      setTask({ task: "" });
       refresh();//refresh is used to refresh component
     }
   };
